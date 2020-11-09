@@ -1,75 +1,81 @@
 const { validationResult } = require("express-validator");
 
 const { addUser, findOneUser, findUser } = require("../../repositories/user");
-
 const { encryptPassword } = require("../../utils/encryptPassword");
-
 const { createJwtToken } = require("../../utils/createJwtToken");
-
-const { convertErrorToFrontFormat } = require("../../utils/convertErros");
-
-const _ = require("lodash");
+const convertErrorToFrontFormat = require("../../utils/convertErros");
 const randomColor = require("../../utils/randomColor");
 
-exports.postSignUp = async (req, res) => {
+async function postSignUp(req, res) {
   const { body } = req;
 
   const erros = validationResult(req);
   const errors = convertErrorToFrontFormat(erros.mapped());
 
-  if (!_.isEmpty(errors)) {
-    res.status(400).json({
+  if (!errors || errors.length === 0) {
+    return res.status(400).json({
       success: false,
       errors,
     });
-  } else {
-    try {
-      const result = await addUser(
-        Object.assign({}, body, {
-          profileColor: randomColor(),
-        })
-      );
+  }
 
-      if (result) {
-        const token = createJwtToken({
-          nickname: result.nickname.toLowerCase(),
-          _id: result._id,
-        });
+  try {
+    const checkUser = await findOneUser({
+      nickname: body.nickname,
+    });
 
-        const user = await findOneUser(
-          {
-            _id: result._id,
-          },
-          {
-            password: 0,
-            contacts: 0,
-          }
-        );
-
-        res.status(200).json({
-          success: true,
-          errors: {},
-          token,
-          user,
-        });
-      } else {
-        res.status(500).json({
-          success: false,
-          errors: {},
-        });
-      }
-    } catch (e) {
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      console.log(e);
-      res.status(500).json({
+    if (checkUser && checkUser.nickname) {
+      res.status(400).json({
         success: false,
-        errors: {},
+        errors: {
+          nickname: "This Nickname is already taken",
+        },
       });
     }
-  }
-};
 
-exports.postSignIn = async (req, res) => {
+    const result = await addUser({
+      ...body,
+      profileColor: randomColor(),
+    });
+
+    if (result) {
+      const token = createJwtToken({
+        nickname: result.nickname.toLowerCase(),
+        _id: result._id,
+      });
+
+      const user = await findOneUser(
+        {
+          _id: result._id,
+        },
+        {
+          password: 0,
+          contacts: 0,
+        }
+      );
+
+      return res.status(200).json({
+        success: true,
+        errors: {},
+        token,
+        user,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      errors: {},
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      errors: {},
+    });
+  }
+}
+
+async function postSignIn(req, res) {
   const { body } = req;
 
   const { password, nickname } = body;
@@ -86,39 +92,34 @@ exports.postSignIn = async (req, res) => {
       }
     );
 
-    console.log("teste", result);
-
     if (result) {
       const token = createJwtToken({
         nickname: result.nickname.toLowerCase(),
         _id: result._id,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         token,
         user: result,
         errors: {},
       });
-    } else {
-      res.status(400).json({
-        success: false,
-        errors: {
-          nickname: "Incorrect nickname or password",
-        },
-      });
     }
+    res.status(400).json({
+      success: false,
+      errors: {
+        nickname: "Incorrect nickname or password",
+      },
+    });
   } catch (e) {
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    console.log(e);
     res.status(500).json({
       success: false,
       errors: {},
     });
   }
-};
+}
 
-exports.getVerifyNickname = async (req, res) => {
+async function getVerifyNickname(req, res) {
   const { nickname } = req.query;
 
   if (!nickname) {
@@ -144,9 +145,14 @@ exports.getVerifyNickname = async (req, res) => {
       errors,
     });
   } catch (e) {
-    console.log(e);
     res.status(500).json({
       success: false,
     });
   }
+}
+
+module.exports = {
+  getVerifyNickname,
+  postSignIn,
+  postSignUp,
 };

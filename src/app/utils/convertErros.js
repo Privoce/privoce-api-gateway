@@ -1,4 +1,5 @@
-const _ = require("lodash");
+function convertErrorToFrontFormat(errors) {
+  return Object.values(errors).map((model) => model.msg);
+}
 
-exports.convertErrorToFrontFormat = (errors) =>
-  _.mapValues(errors, (model) => model.msg);
+module.exports = convertErrorToFrontFormat;

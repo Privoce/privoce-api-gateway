@@ -2,7 +2,7 @@ const { UserModel } = require("../../models/user");
 
 const { encryptPassword } = require("../../utils/encryptPassword");
 
-exports.addUser = (model) => {
+function addUser(model) {
   const user = new UserModel({
     nickname: model.nickname,
     password: encryptPassword(model.password),
@@ -10,14 +10,23 @@ exports.addUser = (model) => {
   });
 
   return user.save();
-};
+}
 
-exports.findUser = (query, params) => UserModel.find(query, params);
-exports.findOneUser = (query, params) => UserModel.findOne(query, params);
-exports.findOneUserByIdAndUpdate = (id, params) =>
-  UserModel.findOneAndUpdate(
+function findUser(query, params) {
+  return UserModel.find(query, params);
+}
+
+function findOneUser(query, params) {
+  return UserModel.findOne(query, params);
+}
+
+function findOneUserByIdAndUpdate(id, params) {
+  return UserModel.findOneAndUpdate(
     {
       _id: id,
     },
     params
   );
+}
+
+module.exports = { addUser, findUser, findOneUser, findOneUserByIdAndUpdate };
