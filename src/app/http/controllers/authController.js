@@ -1,3 +1,5 @@
+const { validationResult } = require("express-validator");
+
 const { addUser, findOneUser, findUser } = require("../../repositories/user");
 
 const { encryptPassword } = require("../../utils/encryptPassword");
@@ -12,8 +14,8 @@ const randomColor = require("../../utils/randomColor");
 exports.postSignUp = async (req, res) => {
   const { body } = req;
 
-  const validationResult = await req.getValidationResult();
-  const errors = convertErrorToFrontFormat(validationResult.mapped());
+  const erros = validationResult(req);
+  const errors = convertErrorToFrontFormat(erros.mapped());
 
   if (!_.isEmpty(errors)) {
     res.status(400).json({
@@ -119,6 +121,13 @@ exports.postSignIn = async (req, res) => {
 exports.getVerifyNickname = async (req, res) => {
   const { nickname } = req.query;
 
+  if (!nickname) {
+    res.status(400).json({
+      success: false,
+      message: "Nickname not found",
+    });
+  }
+
   try {
     const result = await findUser({
       nickname: nickname.toLowerCase(),
@@ -135,6 +144,7 @@ exports.getVerifyNickname = async (req, res) => {
       errors,
     });
   } catch (e) {
+    console.log(e);
     res.status(500).json({
       success: false,
     });
