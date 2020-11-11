@@ -145,12 +145,8 @@ async function postSignInGoogle(req, res) {
 
       res.cookie("jwt", token);
 
-      return res.status(200).json({
-        success: true,
-        token,
-        user: result,
-        errors: {},
-      });
+      const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
+      res.redirect(frontAuthCallback);
     }
 
     //if not exists, we will create the new user
@@ -168,12 +164,8 @@ async function postSignInGoogle(req, res) {
 
       res.cookie("jwt", token);
 
-      return res.status(200).json({
-        success: true,
-        token,
-        user: newUser,
-        errors: {},
-      });
+      const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
+      res.redirect(frontAuthCallback);
     }
 
     res.status(400).json({
