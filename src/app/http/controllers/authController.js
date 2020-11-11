@@ -216,7 +216,14 @@ async function getVerifyEmail(req, res) {
 }
 
 async function getMe(req, res) {
-  return res.status(200).json(req.currentUser);
+  const token =
+    req.get("x-access-token") ||
+    req.body["x-access-token"] ||
+    req.query["x-access-token"] ||
+    req.headers["x-access-token"] ||
+    req.headers["authorization"].split(" ")[1] ||
+    null;
+  return res.status(200).json({ token: token, user: req.currentUser });
 }
 
 module.exports = {
