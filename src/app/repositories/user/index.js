@@ -5,7 +5,8 @@ const { encryptPassword } = require("../../utils/encryptPassword");
 function addUser(model) {
   const user = new UserModel({
     nickname: model.nickname,
-    password: encryptPassword(model.password),
+    password: model.password ? encryptPassword(model.password) : "",
+    email: model.email,
     profileColor: model.profileColor,
   });
 

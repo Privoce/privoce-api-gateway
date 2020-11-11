@@ -7,6 +7,14 @@ const UserSchema = new Schema({
     type: String,
     default: "",
     trim: true,
+    unique: false,
+    required: true,
+    lowercase: true,
+  },
+  email: {
+    type: String,
+    default: "",
+    trim: true,
     unique: true,
     required: true,
     lowercase: true,
@@ -15,7 +23,7 @@ const UserSchema = new Schema({
     type: String,
     default: "",
     trim: true,
-    required: true,
+    required: false,
   },
   profileColor: {
     type: String,

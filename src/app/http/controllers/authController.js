@@ -21,14 +21,14 @@ async function postSignUp(req, res) {
 
   try {
     const checkUser = await findOneUser({
-      nickname: body.nickname,
+      email: body.email,
     });
 
-    if (checkUser && checkUser.nickname) {
+    if (checkUser && checkUser.email) {
       res.status(400).json({
         success: false,
         errors: {
-          nickname: "This Nickname is already taken",
+          email: "This email is already taken",
         },
       });
     }
@@ -40,7 +40,7 @@ async function postSignUp(req, res) {
 
     if (result) {
       const token = createJwtToken({
-        nickname: result.nickname.toLowerCase(),
+        email: result.email.toLowerCase(),
         _id: result._id,
       });
 
@@ -78,13 +78,13 @@ async function postSignUp(req, res) {
 async function postSignIn(req, res) {
   const { body } = req;
 
-  const { password, nickname } = body;
+  const { password, email } = body;
 
   try {
     const result = await findOneUser(
       {
         password: encryptPassword(password),
-        nickname: nickname.toLowerCase(),
+        email: email.toLowerCase(),
       },
       {
         password: 0,
@@ -94,7 +94,7 @@ async function postSignIn(req, res) {
 
     if (result) {
       const token = createJwtToken({
-        nickname: result.nickname.toLowerCase(),
+        email: result.email.toLowerCase(),
         _id: result._id,
       });
 
@@ -108,7 +108,7 @@ async function postSignIn(req, res) {
     res.status(400).json({
       success: false,
       errors: {
-        nickname: "Incorrect nickname or password",
+        email: "Incorrect email or password",
       },
     });
   } catch (e) {
@@ -119,25 +119,97 @@ async function postSignIn(req, res) {
   }
 }
 
-async function getVerifyNickname(req, res) {
-  const { nickname } = req.query;
+async function postSignInGoogle(req, res) {
+  const email = req.user._json.email;
+  const displayName = req.user.displayName;
+  const name = req.user.name.givenName;
 
-  if (!nickname) {
+  const provider = req.user.provide;
+
+  try {
+    const result = await findOneUser(
+      {
+        email: email.toLowerCase(),
+      },
+      {
+        password: 0,
+        contacts: 0,
+      }
+    );
+
+    if (result) {
+      const token = createJwtToken({
+        email: result.email.toLowerCase(),
+        _id: result._id,
+      });
+
+      res.cookie("jwt", token);
+
+      return res.status(200).json({
+        success: true,
+        token,
+        user: result,
+        errors: {},
+      });
+    }
+
+    //if not exists, we will create the new user
+    const newUser = await addUser({
+      nickname: name,
+      email: email,
+      profileColor: randomColor(),
+    });
+
+    if (newUser) {
+      const token = createJwtToken({
+        email: newUser.email.toLowerCase(),
+        _id: newUser._id,
+      });
+
+      res.cookie("jwt", token);
+
+      return res.status(200).json({
+        success: true,
+        token,
+        user: newUser,
+        errors: {},
+      });
+    }
+
     res.status(400).json({
       success: false,
-      message: "Nickname not found",
+      errors: {
+        nickname: "error",
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      errors: {},
+    });
+  }
+}
+
+async function getVerifyEmail(req, res) {
+  const { email } = req.query;
+
+  if (!email) {
+    res.status(400).json({
+      success: false,
+      message: "Email not found",
     });
   }
 
   try {
     const result = await findUser({
-      nickname: nickname.toLowerCase(),
+      email: email.toLowerCase(),
     });
 
     const errors = {};
 
     if (result.length > 0) {
-      errors.nickname = "This Nickname is already taken";
+      errors.email = "This Email is already taken";
     }
 
     res.status(200).json({
@@ -152,7 +224,8 @@ async function getVerifyNickname(req, res) {
 }
 
 module.exports = {
-  getVerifyNickname,
+  getVerifyEmail,
   postSignIn,
   postSignUp,
+  postSignInGoogle,
 };
