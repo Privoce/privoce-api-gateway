@@ -11,8 +11,6 @@ function jwtMiddleware(req, res, next) {
     req.headers["authorization"].split(" ")[1] ||
     null;
 
-  console.log("header", token);
-
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedData) => {
     if (err) {
       return res.status(401).json({
@@ -22,12 +20,12 @@ function jwtMiddleware(req, res, next) {
       });
     }
 
-    const { nickname } = decodedData;
+    const { email } = decodedData;
 
     try {
       const user = await findOneUser(
         {
-          nickname,
+          email,
         },
         {
           password: 0,

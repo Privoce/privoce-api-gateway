@@ -215,9 +215,14 @@ async function getVerifyEmail(req, res) {
   }
 }
 
+async function getMe(req, res) {
+  return res.status(200).json(req.currentUser);
+}
+
 module.exports = {
   getVerifyEmail,
   postSignIn,
   postSignUp,
   postSignInGoogle,
+  getMe,
 };
