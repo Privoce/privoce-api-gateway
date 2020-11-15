@@ -33,7 +33,7 @@ route.get("/auth/me", authMiddleware, getMe);
 route.get("/googleRedirect", passport.authenticate("google"), postSignInGoogle);
 
 //other services url
-route.all("/papo", authMiddleware, (req, res, next) => {
+route.use("/papo", authMiddleware, (req, res, next) => {
   papoProxy(req, res, next);
 });
 

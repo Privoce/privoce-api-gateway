@@ -42,7 +42,6 @@ opts.secretOrKey = process.env.JWT_SECRET;
 // main authentication, our app will rely on it
 passport.use(
   new JwtStrategy(opts, async function (jwt_payload, done) {
-    console.log("JWT BASED AUTH GETTING CALLED", jwt_payload); // called everytime a protected URL is being served
     const result = await findOneUser(
       {
         password: encryptPassword(password),
@@ -95,11 +94,9 @@ passport.use(
 
 // These functions are required for getting data To/from JSON returned from Providers
 passport.serializeUser(function (user, done) {
-  console.log("I should have jack ");
   done(null, user);
 });
 passport.deserializeUser(function (obj, done) {
-  console.log("I wont have jack shit");
   done(null, obj);
 });
 
@@ -108,5 +105,5 @@ app.use(routes);
 mongooseService();
 
 app.listen(port, () => {
-  console.log(`running on port ${port}`);
+  console.log(`Auth gateway running on  ${process.env.APP_URL}:${port}`);
 });

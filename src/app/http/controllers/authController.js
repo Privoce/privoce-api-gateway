@@ -147,6 +147,7 @@ async function postSignInGoogle(req, res) {
 
       const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
       res.redirect(frontAuthCallback);
+      return;
     }
 
     //if not exists, we will create the new user
