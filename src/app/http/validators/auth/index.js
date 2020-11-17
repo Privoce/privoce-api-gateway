@@ -29,8 +29,8 @@ module.exports.signupValidator = () => [
     .isLength({ min: 5, max: 12 })
     .withMessage("The Password must have between 5 and 12 characters"),
   check("email")
-    .isLength({ min: 10, max: 22 })
-    .withMessage("The Email must have between 10 and 22 characters")
+    .isLength({ min: 10, max: 100 })
+    .withMessage("The Email must have between 10 and 100 characters")
     .custom(
       (email) =>
         new Promise(async (resolve, reject) => {

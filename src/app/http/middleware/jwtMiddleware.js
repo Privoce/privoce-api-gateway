@@ -3,14 +3,6 @@ const { findOneUser } = require("../../repositories/user");
 const jwt = require("jsonwebtoken");
 
 function jwtMiddleware(req, res, next) {
-  if (
-    req.originalUrl === "/papo" ||
-    req.originalUrl === "/papo/signin" ||
-    req.originalUrl === "/papo/signup"
-  ) {
-    return next();
-  }
-
   const token =
     req.get("x-access-token") ||
     req.body["x-access-token"] ||
@@ -45,12 +37,14 @@ function jwtMiddleware(req, res, next) {
       if (user) {
         req.currentUser = user;
         next();
+        return;
       } else {
         res.status(401).json({
           success: false,
           errors: {},
           result: [],
         });
+        return;
       }
     } catch (e) {
       res.status(500).json({
