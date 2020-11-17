@@ -14,14 +14,15 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 
 const routes = require("./routes");
 const mongooseService = require("./app/services/mongoose");
-const { addUser, findOneUser, findUser } = require("./app/repositories/user");
+const { findOneUser } = require("./app/repositories/user");
+const corsOptions = require("./config/cors");
 
 const app = express();
 const port = process.env.PORT;
 
 app.use(compression());
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -69,7 +70,6 @@ passport.use(
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
     function (accessToken, refreshToken, profile, done) {
-      //console.log(accessToken, refreshToken, profile)
       console.log("GOOGLE BASED OAUTH VALIDATION GETTING CALLED");
       return done(null, profile);
     }
@@ -85,7 +85,6 @@ passport.use(
       profileFields: ["id", "displayName", "email", "picture"],
     },
     function (accessToken, refreshToken, profile, done) {
-      console.log(profile);
       console.log("FACEBOOK BASED OAUTH VALIDATION GETTING CALLED");
       return done(null, profile);
     }
