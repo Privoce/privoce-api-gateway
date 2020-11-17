@@ -1,11 +1,12 @@
-var whitelist = ["http://localhost:3000", "http://localhost", "*"];
+const whitelist = ["http://localhost:3000", "http://localhost"];
 
-var corsOptions = {
+const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.log(origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
