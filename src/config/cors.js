@@ -1,4 +1,8 @@
-const whitelist = ["http://localhost:3000", "http://localhost"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost",
+  "https://papo.privoce.com",
+];
 
 const corsOptions = {
   credentials: true,
