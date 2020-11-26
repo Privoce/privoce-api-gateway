@@ -31,6 +31,12 @@ const UserSchema = new Schema({
     trim: true,
     required: true,
   },
+  googleAuthToken: {
+    type: String,
+    default: "",
+    trim: true,
+    required: false,
+  },
 });
 
 const UserModel = new Model("User", UserSchema);

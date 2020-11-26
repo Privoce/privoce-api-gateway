@@ -7,6 +7,7 @@ function addUser(model) {
     nickname: model.nickname,
     password: model.password ? encryptPassword(model.password) : "",
     email: model.email,
+    googleAuthToken: model.googleToken,
     profileColor: model.profileColor,
   });
 

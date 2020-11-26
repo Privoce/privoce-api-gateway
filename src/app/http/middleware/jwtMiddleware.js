@@ -36,6 +36,7 @@ function jwtMiddleware(req, res, next) {
 
       if (user) {
         req.currentUser = user;
+        req.token = token;
         next();
         return;
       } else {
