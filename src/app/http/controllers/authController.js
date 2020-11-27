@@ -76,11 +76,10 @@ async function postSignInGoogle(req, res) {
         _id: result._id,
       });
 
-      // update token on database
-      const update = findOneUserByIdAndUpdate(result._id, {
+      // update google token on database
+      const update = await findOneUserByIdAndUpdate(result._id, {
         googleAuthToken: req.user.googleToken,
       });
-      console.log("teste", update);
 
       res.cookie("jwt", token);
 
