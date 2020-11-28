@@ -6,17 +6,39 @@
 
 </div>
 
-**A api gateway to center all services entry point.**
+<div align="center">
 
-## Usage
+## Auth service for Privoce project.
 
-Clone the project:
+</div>
+
+<hr>
+<bR>
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/javascript-%23F7DF1E.svg?&style=for-the-badge&logo=javascript&logoColor=black" height="25"/>
+<img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?&style=for-the-badge&logo=mongodb&logoColor=white" height="25"/>
+<img src="https://img.shields.io/badge/node.js%20-%2343853D.svg?&style=for-the-badge&logo=node.js&logoColor=white" height="25"/>
+<img src="https://img.shields.io/badge/express.js%20-%23404d59.svg?&style=for-the-badge" height="25"/>
+
+</p>
+
+<div align="center">
+
+### [📚 Documentation](doc.md)
+
+</div>
+
+## 🚀 Usage:
+
+🔃 Clone the project:
 
 ```bash
 git clone https://github.com/Privoce/alora-api-gateway.git
 ```
 
-Install dependecys:
+💻 Install dependencies:
 
 ```bash
 yarn
@@ -24,7 +46,13 @@ yarn
 npm install
 ```
 
-Run the service:
+⚙ Setup the .env file:
+
+```bash
+# (use your favorite text editor)
+```
+
+✅ Run the service:
 
 ```bash
 yarn start
@@ -32,6 +60,10 @@ yarn start
 npm start
 ```
 
-You need to configure the other service address(on config) and go up
+<br>
 
-Made with ❤ in Bahia, Brasil.
+<div align="center">
+
+### Made with 💙 in Bahia, Brasil.
+
+</div>
