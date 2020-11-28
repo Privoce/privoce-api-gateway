@@ -53,6 +53,9 @@ async function postSignIn(req, res) {
 }
 
 async function postSignInGoogle(req, res) {
+  const { state } = req.query;
+  const { returnTo } = JSON.parse(Buffer.from(state, "base64").toString());
+
   const email = req.user._json.email;
   const displayName = req.user.displayName;
   const name = req.user.name.givenName;
@@ -77,11 +80,18 @@ async function postSignInGoogle(req, res) {
       });
 
       // update google token on database
-      const update = await findOneUserByIdAndUpdate(result._id, {
+      await findOneUserByIdAndUpdate(result._id, {
         googleAuthToken: req.user.googleToken,
       });
 
       res.cookie("jwt", token);
+
+      // if have a redirect url
+      if (returnTo) {
+        res.redirect(`${returnTo}/${token}`);
+      }
+
+      //if not, use default (papo frontend)
 
       const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
       res.redirect(frontAuthCallback);
