@@ -2,6 +2,7 @@ const whitelist = [
   "http://localhost:3000",
   "http://localhost",
   "https://papo.privoce.com",
+  "chrome-extension://jjgljgcfbjfjlmenoibhgnkbgohilhnb",
 ];
 
 const corsOptions = {

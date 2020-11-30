@@ -1,6 +1,8 @@
 const express = require("express");
 const passport = require("passport");
 
+// TODO:: ver erro no tokeen quando da get no calendario
+
 const {
   postSignIn,
   postSignInGoogle,
@@ -24,6 +26,7 @@ route.post("/auth/signin", postSignIn);
  */
 route.get("/auth/google", (req, res, next) => {
   const returnTo = req.query.redirect;
+
   const state = returnTo
     ? Buffer.from(JSON.stringify({ returnTo })).toString("base64")
     : undefined;

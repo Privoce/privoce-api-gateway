@@ -54,13 +54,12 @@ async function postSignIn(req, res) {
 
 async function postSignInGoogle(req, res) {
   const { state } = req.query;
-  const { returnTo } = JSON.parse(Buffer.from(state, "base64").toString());
-
+  const stateParsed = JSON.parse(Buffer.from(state, "base64").toString());
+  const returnTo = stateParsed.returnTo ? stateParsed.returnTo : undefined;
   const email = req.user._json.email;
-  const displayName = req.user.displayName;
   const name = req.user.name.givenName;
 
-  const provider = req.user.provide;
+  let token = "";
 
   try {
     const result = await findOneUser(
@@ -72,9 +71,9 @@ async function postSignInGoogle(req, res) {
         contacts: 0,
       }
     );
-
+    // if user already exists
     if (result) {
-      const token = createJwtToken({
+      token = createJwtToken({
         email: result.email.toLowerCase(),
         _id: result._id,
       });
@@ -85,45 +84,32 @@ async function postSignInGoogle(req, res) {
       });
 
       res.cookie("jwt", token);
-
-      // if have a redirect url
-      if (returnTo) {
-        res.redirect(`${returnTo}/${token}`);
-      }
-
-      //if not, use default (papo frontend)
-
-      const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
-      res.redirect(frontAuthCallback);
-      return;
-    }
-
-    //if not exists, we will create the new user
-    const newUser = await addUser({
-      nickname: name,
-      email: email,
-      profileColor: randomColor(),
-      googleToken: req.user.googleToken,
-    });
-
-    if (newUser) {
-      const token = createJwtToken({
-        email: newUser.email.toLowerCase(),
-        _id: newUser._id,
+    } else {
+      //if not exists, we will create the new user
+      const newUser = await addUser({
+        nickname: name,
+        email: email,
+        profileColor: randomColor(),
+        googleToken: req.user.googleToken,
       });
 
-      res.cookie("jwt", token);
+      if (newUser) {
+        token = createJwtToken({
+          email: newUser.email.toLowerCase(),
+          _id: newUser._id,
+        });
 
-      const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
-      res.redirect(frontAuthCallback);
+        res.cookie("jwt", token);
+      }
     }
 
-    res.status(400).json({
-      success: false,
-      errors: {
-        nickname: "error",
-      },
-    });
+    // if have a redirect url
+    if (returnTo) {
+      res.redirect(`${returnTo}${token}`);
+    }
+
+    const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
+    res.redirect(frontAuthCallback);
   } catch (e) {
     console.log(e);
     res.status(500).json({

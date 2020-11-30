@@ -64,7 +64,8 @@ Query Param:
 
 Exemple: `https://.../auth/google?redirect=www.myfrontend.com/auth-token/`
 
-Description: The redirect param is a url, that will used on callback to return the token, for exemple: `...?redirect=www.test.com/token` will be redirected to: `www.teste.com/token/2398a9sdjhkhasd`.
+Description: The redirect param is a url, that will used on callback to return the token, for exemple: `...?redirect=www.test.com/token/` will be redirected to: `www.test.com/token/2398a9sdjhkhasd`.
+If you want to use query params, just send the url like this: `www.test.com?token=`.
 
 Response: No response, redirect url will be called when finish google auth.
 
