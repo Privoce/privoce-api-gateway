@@ -57,7 +57,8 @@ async function postSignInGoogle(req, res) {
   const stateParsed = state
     ? JSON.parse(Buffer.from(state, "base64").toString())
     : undefined;
-  const returnTo = stateParsed.returnTo ? stateParsed.returnTo : undefined;
+  const returnTo =
+    stateParsed && stateParsed.returnTo ? stateParsed.returnTo : undefined;
   const email = req.user._json.email;
   const name = req.user.name.givenName;
 
