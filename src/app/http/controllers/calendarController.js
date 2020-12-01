@@ -28,7 +28,7 @@ async function getUserEvents(req, res) {
   calendar.events.list(
     {
       calendarId: "primary",
-      timeMin: new Date().toISOString(),
+      timeMin: new Date().toISOString().split("T")[0] + "T00:00:00.748Z", // this is the real gambiarra
       maxResults: CalendarEvents,
       singleEvents: true,
       orderBy: "startTime",
