@@ -38,7 +38,10 @@ route.get("/auth/google", (req, res, next) => {
       "email",
       "https://www.googleapis.com/auth/calendar.events",
       "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/gmail.readonly",
     ],
+    accessType: "offline",
+    approvalPrompt: "force",
   })(req, res, next);
 });
 route.get("/googleRedirect", passport.authenticate("google"), postSignInGoogle);

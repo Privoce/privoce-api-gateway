@@ -8,6 +8,7 @@ function addUser(model) {
     password: model.password ? encryptPassword(model.password) : "",
     email: model.email,
     googleAuthToken: model.googleToken,
+    googleRefreshToken: model.googleRefreshToken,
     profileColor: model.profileColor,
   });
 

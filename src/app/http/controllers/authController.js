@@ -84,6 +84,7 @@ async function postSignInGoogle(req, res) {
       // update google token on database
       await findOneUserByIdAndUpdate(result._id, {
         googleAuthToken: req.user.googleToken,
+        googleRefreshToken: req.user.googleRefreshToken,
       });
 
       res.cookie("jwt", token);
@@ -94,6 +95,7 @@ async function postSignInGoogle(req, res) {
         email: email,
         profileColor: randomColor(),
         googleToken: req.user.googleToken,
+        googleRefreshToken: req.user.googleRefreshToken,
       });
 
       if (newUser) {

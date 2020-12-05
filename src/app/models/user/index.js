@@ -37,6 +37,12 @@ const UserSchema = new Schema({
     trim: true,
     required: false,
   },
+  googleRefreshToken: {
+    type: String,
+    default: "",
+    trim: true,
+    required: false,
+  },
 });
 
 const UserModel = new Model("User", UserSchema);
