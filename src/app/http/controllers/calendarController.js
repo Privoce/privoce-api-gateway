@@ -17,12 +17,10 @@ async function getUserEvents(req, res) {
   }
 
   // eslint-disable-next-line no-use-before-define
-  const response = await getCalendarData(req.currentUser);
-
-  return res.status(200).json({ ...response });
+  getCalendarData(req.currentUser, (result) => res.status(200).json(result));
 }
 
-async function getCalendarData(user) {
+async function getCalendarData(user, callback) {
   const oAuthClient = new OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
@@ -47,8 +45,6 @@ async function getCalendarData(user) {
     auth: oAuthClient,
   });
 
-  let allEvents = [];
-
   calendar.events.list(
     {
       calendarId: 'primary',
@@ -69,7 +65,7 @@ async function getCalendarData(user) {
             'google',
             user.googleRefreshToken,
             async (accessToken) => {
-              const result = await findOneUser(
+              const result = findOneUser(
                 {
                   email: user.email,
                 },
@@ -91,14 +87,15 @@ async function getCalendarData(user) {
         }
         return { error: true };
       }
-      allEvents = response.data.items;
+
+      const allEvents = response.data.items;
+
+      if (allEvents.length) {
+        return callback({ success: true, allEvents });
+      }
+      return callback({ success: true, allEvents: [] });
     },
   );
-
-  if (allEvents.length) {
-    return { success: true, allEvents };
-  }
-  return { success: true, allEvents: [] };
 }
 
 async function teste(req, res) {
