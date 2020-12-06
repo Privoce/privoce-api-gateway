@@ -88,12 +88,12 @@ async function getCalendarData(user, callback) {
         return { error: true };
       }
 
-      const allEvents = response.data.items;
+      const events = response.data.items;
 
-      if (allEvents.length) {
-        return callback({ success: true, allEvents });
+      if (events.length) {
+        return callback({ success: true, events });
       }
-      return callback({ success: true, allEvents: [] });
+      return callback({ success: true, events: [] });
     },
   );
 }
