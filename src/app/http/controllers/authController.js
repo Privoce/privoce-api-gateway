@@ -2,11 +2,11 @@ const {
   addUser,
   findOneUser,
   findOneUserByIdAndUpdate,
-} = require("../../repositories/user");
-const { encryptPassword } = require("../../utils/encryptPassword");
-const { createJwtToken } = require("../../utils/createJwtToken");
+} = require('../../repositories/user');
+const { encryptPassword } = require('../../utils/encryptPassword');
+const { createJwtToken } = require('../../utils/createJwtToken');
 
-const randomColor = require("../../utils/randomColor");
+const randomColor = require('../../utils/randomColor');
 
 async function postSignIn(req, res) {
   const { body } = req;
@@ -22,7 +22,7 @@ async function postSignIn(req, res) {
       {
         password: 0,
         contacts: 0,
-      }
+      },
     );
 
     if (result) {
@@ -41,7 +41,7 @@ async function postSignIn(req, res) {
     res.status(400).json({
       success: false,
       errors: {
-        email: "Incorrect email or password",
+        email: 'Incorrect email or password',
       },
     });
   } catch (e) {
@@ -55,14 +55,14 @@ async function postSignIn(req, res) {
 async function postSignInGoogle(req, res) {
   const { state } = req.query;
   const stateParsed = state
-    ? JSON.parse(Buffer.from(state, "base64").toString())
+    ? JSON.parse(Buffer.from(state, 'base64').toString())
     : undefined;
   const returnTo =
     stateParsed && stateParsed.returnTo ? stateParsed.returnTo : undefined;
-  const email = req.user._json.email;
+  const { email } = req.user._json;
   const name = req.user.name.givenName;
 
-  let token = "";
+  let token = '';
 
   try {
     const result = await findOneUser(
@@ -72,7 +72,7 @@ async function postSignInGoogle(req, res) {
       {
         password: 0,
         contacts: 0,
-      }
+      },
     );
     // if user already exists
     if (result) {
@@ -87,12 +87,12 @@ async function postSignInGoogle(req, res) {
         googleRefreshToken: req.user.googleRefreshToken,
       });
 
-      res.cookie("jwt", token);
+      res.cookie('jwt', token);
     } else {
-      //if not exists, we will create the new user
+      // if not exists, we will create the new user
       const newUser = await addUser({
         nickname: name,
-        email: email,
+        email,
         profileColor: randomColor(),
         googleToken: req.user.googleToken,
         googleRefreshToken: req.user.googleRefreshToken,
@@ -104,7 +104,7 @@ async function postSignInGoogle(req, res) {
           _id: newUser._id,
         });
 
-        res.cookie("jwt", token);
+        res.cookie('jwt', token);
       }
     }
 

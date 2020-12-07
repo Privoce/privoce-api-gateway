@@ -39,14 +39,14 @@ const googleStrategy = new GoogleStrategy(
     console.log(
       'GOOGLE BASED OAUTH VALIDATION GETTING CALLED',
       accessToken,
-      refreshToken
+      refreshToken,
     );
     return done(null, {
       ...profile,
       googleToken: accessToken,
       googleRefreshToken: refreshToken,
     });
-  }
+  },
 );
 
 passport.use(googleStrategy);
@@ -62,8 +62,8 @@ passport.use(
     (accessToken, refreshToken, profile, done) => {
       console.log('FACEBOOK BASED OAUTH VALIDATION GETTING CALLED');
       return done(null, profile);
-    }
-  )
+    },
+  ),
 );
 
 refresh.use(googleStrategy);

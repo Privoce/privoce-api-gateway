@@ -63,9 +63,9 @@ async function getCalendarData(user, callback) {
           // refresh google token
           refresh.requestNewAccessToken(
             'google',
-            user.googleRefreshToken,
-            async (accessToken) => {
-              const result = findOneUser(
+            userData.googleRefreshToken,
+            async (error, accessToken) => {
+              const result = await findOneUser(
                 {
                   email: user.email,
                 },
@@ -81,7 +81,7 @@ async function getCalendarData(user, callback) {
                 googleAuthToken: accessToken,
               });
 
-              getCalendarData(calendar, user);
+              getCalendarData(user, callback);
             },
           );
         }
@@ -113,12 +113,12 @@ async function teste(req, res) {
     auth: oAuthClient,
   });
 
-  const teste = await gmail.users.watch({
+  const emails = await gmail.users.watch({
     userId: 'me',
     topicName: 'projects/privoce-295118/topics/privoce',
   });
 
-  res.status(200).send(teste);
+  res.status(200).send(emails);
 }
 
 module.exports = { getUserEvents, teste };
