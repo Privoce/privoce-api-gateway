@@ -10,7 +10,19 @@ const { CalendarEvents } = require('../../../config/globa.settings');
 const { OAuth2 } = google.auth;
 
 async function getUserEvents(req, res) {
-  if (!req.currentUser.googleAuthToken) {
+  const userData = await findOneUser(
+    {
+      email: req.currentUser.email,
+    },
+    {
+      password: 0,
+      contacts: 0,
+    },
+  );
+
+  console.log(userData);
+
+  if (!userData.googleAuthToken) {
     return res
       .status(401)
       .send({ error: true, message: 'Please, connect with google account!' });
