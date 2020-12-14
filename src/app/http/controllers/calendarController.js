@@ -109,6 +109,13 @@ async function getCalendarData(user, callback) {
     },
   );
 
+  calendar.channels.stop({
+    requestBody: {
+      id: 'primary',
+      resourceId: '',
+    },
+  });
+
   calendar.events.watch({
     calendarId: 'primary',
     requestBody: {
@@ -121,7 +128,8 @@ async function getCalendarData(user, callback) {
 
 // When have a new event on calendar
 // dispatch a socket action to client
-function newEventHandle() {
+function newEventHandle(req, res) {
+  console.log(req.body);
   global.io.emit('FromAPI', 'Testando apenas');
 }
 
