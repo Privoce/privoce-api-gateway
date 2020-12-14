@@ -57,14 +57,72 @@ async function getCalendarData(user, callback) {
     auth: oAuthClient,
   });
 
+  calendar.events.list(
+    {
+      calendarId: 'primary',
+      timeMin: `${new Date().toISOString().split('T')[0]}T00:00:00.748Z`, // this is the real gambiarra
+      maxResults: CalendarEvents,
+      singleEvents: true,
+      orderBy: 'startTime',
+    },
+    (err, response) => {
+      if (err) {
+        if (
+          err.response &&
+          err.response.status &&
+          err.response.status === 401
+        ) {
+          // refresh google token
+          refresh.requestNewAccessToken(
+            'google',
+            userData.googleRefreshToken,
+            async (error, accessToken) => {
+              const result = await findOneUser(
+                {
+                  email: user.email,
+                },
+                {
+                  password: 0,
+                  contacts: 0,
+                },
+              );
+
+              // update google token on database
+              // eslint-disable-next-line no-underscore-dangle
+              await findOneUserByIdAndUpdate(result._id, {
+                googleAuthToken: accessToken,
+              });
+
+              getCalendarData(user, callback);
+            },
+          );
+        }
+        return { error: true };
+      }
+
+      const events = response.data.items;
+
+      if (events.length) {
+        return callback({ success: true, events });
+      }
+      return callback({ success: true, events: [] });
+    },
+  );
+
   calendar.events.watch({
-    calendarId: 'prymary',
+    calendarId: 'primary',
     requestBody: {
-      id: 'asdqwe',
+      id: 'primary',
       type: 'web_hook',
-      address: 'https://localhost:3030/cbe',
+      address: 'https://auth.privoce.com/new-event-handle',
     },
   });
 }
 
-module.exports = { getUserEvents };
+// When have a new event on calendar
+// dispatch a socket action to client
+function newEventHandle() {
+  global.io.emit('FromAPI', 'Testando apenas');
+}
+
+module.exports = { getUserEvents, newEventHandle };

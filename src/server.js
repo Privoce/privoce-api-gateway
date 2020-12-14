@@ -7,15 +7,15 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const refresh = require('passport-oauth2-refresh');
+const socketIo = require('socket.io');
+const http = require('http');
 
 const routes = require('./app/http/routes');
 const mongooseService = require('./app/services/mongoose');
-const { findOneUser } = require('./app/repositories/user');
-const corsOptions = require('./config/cors');
+const { corsOptions, whitelist } = require('./config/cors');
 
 const app = express();
 const port = process.env.PORT;
@@ -80,6 +80,36 @@ app.use(routes);
 
 mongooseService();
 
-app.listen(port, () => {
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+  cors: {
+    origin: whitelist,
+    methods: ['GET', 'POST'],
+  },
+});
+
+let interval;
+const getApiAndEmit = (socket) => {
+  const response = new Date();
+  // Emitting a new message. Will be consumed by the client
+  socket.emit('FromAPI', response);
+};
+
+io.on('connection', (socket) => {
+  console.log('New client connected');
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+    clearInterval(interval);
+  });
+});
+
+global.io = io;
+
+server.listen(port, () => {
   console.log(`Auth gateway running on  ${process.env.APP_URL}:${port}`);
 });

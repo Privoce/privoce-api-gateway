@@ -1,8 +1,8 @@
 const whitelist = [
-  "http://localhost:3000",
-  "http://localhost",
-  "https://papo.privoce.com",
-  "chrome-extension://jjgljgcfbjfjlmenoibhgnkbgohilhnb",
+  'http://localhost:3000',
+  'http://localhost',
+  'https://papo.privoce.com',
+  'chrome-extension://jjgljgcfbjfjlmenoibhgnkbgohilhnb',
 ];
 
 const corsOptions = {
@@ -12,9 +12,9 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.log(origin);
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error('Not allowed by CORS'));
     }
   },
 };
 
-module.exports = corsOptions;
+module.exports = { corsOptions, whitelist };
