@@ -1,11 +1,11 @@
-const { UserModel } = require("../../models/user");
+const { UserModel } = require('../../models/user');
 
-const { encryptPassword } = require("../../utils/encryptPassword");
+const { encryptPassword } = require('../../utils/encryptPassword');
 
 function addUser(model) {
   const user = new UserModel({
     nickname: model.nickname,
-    password: model.password ? encryptPassword(model.password) : "",
+    password: model.password ? encryptPassword(model.password) : '',
     email: model.email,
     googleAuthToken: model.googleToken,
     googleRefreshToken: model.googleRefreshToken,
@@ -28,7 +28,7 @@ function findOneUserByIdAndUpdate(id, params) {
     {
       _id: id,
     },
-    params
+    params,
   );
 }
 

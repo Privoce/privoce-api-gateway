@@ -1,9 +1,9 @@
-const { validationResult } = require("express-validator");
+const { validationResult } = require('express-validator');
 
-const { addUser, findOneUser, findUser } = require("../../repositories/user");
-const { createJwtToken } = require("../../utils/createJwtToken");
-const convertErrorToFrontFormat = require("../../utils/convertErros");
-const randomColor = require("../../utils/randomColor");
+const { addUser, findOneUser, findUser } = require('../../repositories/user');
+const { createJwtToken } = require('../../utils/createJwtToken');
+const convertErrorToFrontFormat = require('../../utils/convertErros');
+const randomColor = require('../../utils/randomColor');
 
 async function postSignUp(req, res) {
   const { body } = req;
@@ -27,7 +27,7 @@ async function postSignUp(req, res) {
       res.status(400).json({
         success: false,
         errors: {
-          email: "This email is already taken",
+          email: 'This email is already taken',
         },
       });
     }
@@ -50,7 +50,7 @@ async function postSignUp(req, res) {
         {
           password: 0,
           contacts: 0,
-        }
+        },
       );
 
       return res.status(200).json({
@@ -80,7 +80,7 @@ async function getVerifyEmail(req, res) {
   if (!email) {
     res.status(400).json({
       success: false,
-      message: "Email not found",
+      message: 'Email not found',
     });
   }
 
@@ -92,7 +92,7 @@ async function getVerifyEmail(req, res) {
     const errors = {};
 
     if (result.length > 0) {
-      errors.email = "This Email is already taken";
+      errors.email = 'This Email is already taken';
     }
 
     res.status(200).json({
@@ -108,11 +108,11 @@ async function getVerifyEmail(req, res) {
 
 async function getMe(req, res) {
   const token =
-    req.get("x-access-token") ||
-    req.body["x-access-token"] ||
-    req.query["x-access-token"] ||
-    req.headers["x-access-token"] ||
-    req.headers["authorization"].split(" ")[1] ||
+    req.get('x-access-token') ||
+    req.body['x-access-token'] ||
+    req.query['x-access-token'] ||
+    req.headers['x-access-token'] ||
+    req.headers['authorization'].split(' ')[1] ||
     null;
   return res.status(200).json({ token: token, user: req.currentUser });
 }

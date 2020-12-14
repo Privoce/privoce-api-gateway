@@ -1,14 +1,14 @@
-const { findOneUser } = require("../../repositories/user");
+const jwt = require('jsonwebtoken');
 
-const jwt = require("jsonwebtoken");
+const { findOneUser } = require('../../repositories/user');
 
 function jwtMiddleware(req, res, next) {
   const token =
-    req.get("x-access-token") ||
-    req.body["x-access-token"] ||
-    req.query["x-access-token"] ||
-    req.headers["x-access-token"] ||
-    req.headers["authorization"].split(" ")[1] ||
+    req.get('x-access-token') ||
+    req.body['x-access-token'] ||
+    req.query['x-access-token'] ||
+    req.headers['x-access-token'] ||
+    req.headers['authorization'].split(' ')[1] ||
     null;
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedData) => {
@@ -31,7 +31,7 @@ function jwtMiddleware(req, res, next) {
           password: 0,
           contacts: 0,
           conversations: 0,
-        }
+        },
       );
 
       if (user) {

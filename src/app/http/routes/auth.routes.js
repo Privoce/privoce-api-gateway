@@ -1,20 +1,20 @@
-const express = require("express");
-const passport = require("passport");
+const express = require('express');
+const passport = require('passport');
 
 // TODO:: ver erro no tokeen quando da get no calendario
 
 const {
   postSignIn,
   postSignInGoogle,
-} = require("../controllers/authController");
+} = require('../controllers/authController');
 
-/***********************************************
-// Auth routes go here, including social auth
-//
-***********************************************/
+/**
+ * Auth routes go here, including social auth
+ */
+
 const route = express.Router();
 
-route.post("/auth/signin", postSignIn);
+route.post('/auth/signin', postSignIn);
 
 /**
  * Route to make the google auth,
@@ -24,26 +24,26 @@ route.post("/auth/signin", postSignIn);
  * If not povide, i will use the .env frontend url.
  * @param {string} redirect - Callback redirect url.
  */
-route.get("/auth/google", (req, res, next) => {
+route.get('/auth/google', (req, res, next) => {
   const returnTo = req.query.redirect;
 
   const state = returnTo
-    ? Buffer.from(JSON.stringify({ returnTo })).toString("base64")
+    ? Buffer.from(JSON.stringify({ returnTo })).toString('base64')
     : undefined;
 
-  return passport.authenticate("google", {
+  return passport.authenticate('google', {
     state,
     scope: [
-      "profile",
-      "email",
-      "https://www.googleapis.com/auth/calendar.events",
-      "https://www.googleapis.com/auth/calendar.readonly",
-      "https://www.googleapis.com/auth/gmail.readonly",
+      'profile',
+      'email',
+      'https://www.googleapis.com/auth/calendar.events',
+      'https://www.googleapis.com/auth/calendar.readonly',
+      'https://www.googleapis.com/auth/gmail.readonly',
     ],
-    accessType: "offline",
-    approvalPrompt: "force",
+    accessType: 'offline',
+    approvalPrompt: 'force',
   })(req, res, next);
 });
-route.get("/googleRedirect", passport.authenticate("google"), postSignInGoogle);
+route.get('/googleRedirect', passport.authenticate('google'), postSignInGoogle);
 
 module.exports = route;
