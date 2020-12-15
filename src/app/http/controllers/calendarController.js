@@ -129,7 +129,7 @@ async function getCalendarData(user, callback) {
 // When have a new event on calendar
 // dispatch a socket action to client
 function newEventHandle(req, res) {
-  console.log(req.body, 'saiu assim');
+  console.log(req, 'saiu assim');
   global.io.emit('FromAPI', 'Testando apenas');
 }
 
