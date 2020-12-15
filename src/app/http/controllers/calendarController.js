@@ -141,6 +141,8 @@ async function getCalendarData(user, callback) {
 // dispatch a socket action to client
 function newEventHandle(req, res) {
   //
+  console.log('cabeça', JSON.stringify(req.headers));
+
   global.io.emit('FromAPI', 'Testando apenas');
 }
 
