@@ -36,9 +36,7 @@ route.get('/auth/google', (req, res, next) => {
     scope: [
       'profile',
       'email',
-      'https://www.googleapis.com/auth/calendar.events',
       'https://www.googleapis.com/auth/calendar.readonly',
-      'https://www.googleapis.com/auth/gmail.readonly',
     ],
     accessType: 'offline',
     approvalPrompt: 'force',
