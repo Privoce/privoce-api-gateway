@@ -140,7 +140,15 @@ async function getCalendarData(user, callback) {
 function newEventHandle(req, res) {
   const idHeader = req.header('x-goog-channel-id');
 
+  if (!idHeader) {
+    return;
+  }
+
   const [, userId] = idHeader.split('privoce-user');
+
+  if (!userId) {
+    return;
+  }
 
   const socketUser = socketClients.find(
     (socketClient) =>
@@ -149,7 +157,9 @@ function newEventHandle(req, res) {
 
   global.io
     .to(socketUser.clientId) // Slice cause i add a "1" and i need to remove
-    .emit('FromAPI', 'Testando apenas');
+    .emit('new-event');
+
+  res.status(204);
 }
 
 module.exports = { getUserEvents, newEventHandle };
