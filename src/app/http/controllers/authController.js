@@ -114,11 +114,11 @@ async function postSignInGoogle(req, res) {
 
     // if have a redirect url
     if (returnTo) {
-      res.redirect(`${returnTo}${token}`);
+      return res.redirect(`${returnTo}${token}`);
     }
 
     const frontAuthCallback = `${process.env.FONT_END_URL}/social/${token}`;
-    res.redirect(frontAuthCallback);
+    return res.redirect(frontAuthCallback);
   } catch (e) {
     console.log(e);
     res.status(500).json({

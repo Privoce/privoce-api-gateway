@@ -4,7 +4,7 @@ const {
   findOneUser,
   findOneUserByIdAndUpdate,
 } = require('../../repositories/user');
-
+const { socketClients } = require('../../socket/socket');
 const { CalendarEvents } = require('../../../config/globa.settings');
 
 const { OAuth2 } = google.auth;
@@ -19,8 +19,6 @@ async function getUserEvents(req, res) {
       contacts: 0,
     },
   );
-
-  console.log(userData);
 
   if (!userData.googleAuthToken) {
     return res
@@ -140,10 +138,18 @@ async function getCalendarData(user, callback) {
 // When have a new event on calendar
 // dispatch a socket action to client
 function newEventHandle(req, res) {
-  //
-  console.log('cabeça', JSON.stringify(req.headers));
+  const idHeader = req.header('x-goog-channel-id');
 
-  global.io.emit('FromAPI', 'Testando apenas');
+  const [, userId] = idHeader.split('privoce-user');
+
+  const socketUser = socketClients.find(
+    (socketClient) =>
+      socketClient.customId === userId.slice(0, userId.length - 1),
+  );
+
+  global.io
+    .to(socketUser.clientId) // Slice cause i add a "1" and i need to remove
+    .emit('FromAPI', 'Testando apenas');
 }
 
 module.exports = { getUserEvents, newEventHandle };

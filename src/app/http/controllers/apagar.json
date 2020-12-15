@@ -1,0 +1,14 @@
+{
+  "connection": "upgrade",
+  "host": "auth.privoce.com",
+  "content-length": "0",
+  "accept": "*/*",
+  "x-goog-channel-id": "asdqwe",
+  "x-goog-channel-expiration": "Mon, 21 Dec 2020 21:25:17 GMT",
+  "x-goog-resource-state": "exists",
+  "x-goog-message-number": "51894947",
+  "x-goog-resource-id": "nHvcvsB8HuoTUAfl1o0xzQbbjYA",
+  "x-goog-resource-uri": "https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json",
+  "user-agent": "APIs-Google; (+https://developers.google.com/webmasters/APIs-Google.html)",
+  "accept-encoding": "gzip,deflate,br"
+}
