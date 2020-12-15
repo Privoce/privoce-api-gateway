@@ -109,27 +109,38 @@ async function getCalendarData(user, callback) {
     },
   );
 
-  calendar.channels.stop({
-    requestBody: {
-      id: 'primary',
-      resourceId: '',
-    },
-  });
+  // if we need to remove the chaanel
+  // calendar.channels.stop({
+  //   requestBody: {
+  //     id: `privoce-user${user._id}1`,
+  //     resourceId: user.calendarResourceId,
+  //   },
+  // });
 
-  calendar.events.watch({
-    calendarId: 'primary',
-    requestBody: {
-      id: `privoce-user${user._id}`,
-      type: 'web_hook',
-      address: 'https://auth.privoce.com/new-event-handle',
-    },
-  });
+  // Need improve this, checking if already have a calendarResource
+  // and check date
+  try {
+    const userEventsWatch = await calendar.events.watch({
+      calendarId: 'primary',
+      requestBody: {
+        id: `privoce-user${user._id}1`,
+        type: 'web_hook',
+        address: 'https://auth.privoce.com/new-event-handle',
+      },
+    });
+
+    await findOneUserByIdAndUpdate(result._id, {
+      calendarResourceId: userEventsWatch.data.resourceId,
+    });
+  } catch (err) {
+    console.log('Already have user watch');
+  }
 }
 
 // When have a new event on calendar
 // dispatch a socket action to client
 function newEventHandle(req, res) {
-  console.log(req, 'saiu assim');
+  //
   global.io.emit('FromAPI', 'Testando apenas');
 }
 

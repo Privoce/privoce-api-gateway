@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema, model: Model } = mongoose;
 
 const UserSchema = new Schema({
   nickname: {
     type: String,
-    default: "",
+    default: '',
     trim: true,
     unique: false,
     required: true,
@@ -13,7 +13,7 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    default: "",
+    default: '',
     trim: true,
     unique: true,
     required: true,
@@ -21,31 +21,37 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    default: "",
+    default: '',
     trim: true,
     required: false,
   },
   profileColor: {
     type: String,
-    default: "",
+    default: '',
     trim: true,
     required: true,
   },
   googleAuthToken: {
     type: String,
-    default: "",
+    default: '',
     trim: true,
     required: false,
   },
   googleRefreshToken: {
     type: String,
-    default: "",
+    default: '',
+    trim: true,
+    required: false,
+  },
+  calendarResourceId: {
+    type: String,
+    default: '',
     trim: true,
     required: false,
   },
 });
 
-const UserModel = new Model("User", UserSchema);
+const UserModel = new Model('User', UserSchema);
 
 exports.UserModel = UserModel;
 exports.UserSchema = UserSchema;

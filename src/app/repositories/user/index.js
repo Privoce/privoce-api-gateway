@@ -10,6 +10,7 @@ function addUser(model) {
     googleAuthToken: model.googleToken,
     googleRefreshToken: model.googleRefreshToken,
     profileColor: model.profileColor,
+    calendarResourceId: model.calendarResourceId,
   });
 
   return user.save();
@@ -32,4 +33,9 @@ function findOneUserByIdAndUpdate(id, params) {
   );
 }
 
-module.exports = { addUser, findUser, findOneUser, findOneUserByIdAndUpdate };
+module.exports = {
+  addUser,
+  findUser,
+  findOneUser,
+  findOneUserByIdAndUpdate,
+};
