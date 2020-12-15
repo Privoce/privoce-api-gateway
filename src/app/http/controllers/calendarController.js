@@ -119,7 +119,7 @@ async function getCalendarData(user, callback) {
   calendar.events.watch({
     calendarId: 'primary',
     requestBody: {
-      id: 'primary',
+      id: `privoce-user${user._id}`,
       type: 'web_hook',
       address: 'https://auth.privoce.com/new-event-handle',
     },
@@ -129,7 +129,7 @@ async function getCalendarData(user, callback) {
 // When have a new event on calendar
 // dispatch a socket action to client
 function newEventHandle(req, res) {
-  console.log(req.body);
+  console.log(req.body, 'saiu assim');
   global.io.emit('FromAPI', 'Testando apenas');
 }
 
