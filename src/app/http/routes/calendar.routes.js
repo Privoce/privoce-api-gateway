@@ -15,5 +15,6 @@ const route = express.Router();
 route.get('/user/calendar', authMiddleware, getUserEvents);
 
 route.post('/new-event-handle', newEventHandle);
+route.post('/cbe', newEventHandle);
 
 module.exports = route;
