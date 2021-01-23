@@ -27,10 +27,12 @@ async function getUserEvents(req, res) {
   }
 
   // eslint-disable-next-line no-use-before-define
-  getCalendarData(req.currentUser, (result) => res.status(200).json(result));
+  return getCalendarData(req.currentUser, req.query.date, (result) =>
+    res.status(200).json(result),
+  );
 }
 
-async function getCalendarData(user, callback) {
+async function getCalendarData(user, date, callback) {
   const oAuthClient = new OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
@@ -58,7 +60,7 @@ async function getCalendarData(user, callback) {
   calendar.events.list(
     {
       calendarId: 'primary',
-      timeMin: `${new Date().toISOString().split('T')[0]}T00:00:00.748Z`, // this is the real gambiarra
+      timeMin: `${new Date(date).toISOString().split('T')[0]}T00:00:00.748Z`, // this is the real gambiarra
       maxResults: CalendarEvents,
       singleEvents: true,
       orderBy: 'startTime',
