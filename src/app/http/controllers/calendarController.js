@@ -1,6 +1,7 @@
 const { google } = require('googleapis');
 const refresh = require('passport-oauth2-refresh');
 const { parse } = require('date-fns');
+
 const {
   findOneUser,
   findOneUserByIdAndUpdate,
@@ -62,7 +63,9 @@ async function getCalendarData(user, date, callback) {
     {
       calendarId: 'primary',
       timeMin: `${
-        new Date(parse(date)).toISOString().split('T')[0]
+        new Date(parse(date, 'MM-dd-yyyy', new Date()))
+          .toISOString()
+          .split('T')[0]
       }T00:00:00.748Z`, // this is the real gambiarra
       maxResults: CalendarEvents,
       singleEvents: true,
